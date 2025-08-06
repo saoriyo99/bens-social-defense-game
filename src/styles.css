@@ -1,0 +1,412 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #00ff41;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+}
+
+.game-container {
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 15px 35px rgba(0, 255, 65, 0.3);
+    border: 2px solid #00ff41;
+}
+
+.story-header {
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(0, 255, 65, 0.1);
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    background: rgba(0, 255, 65, 0.1);
+    border-radius: 10px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #00ff41;
+}
+
+.stat-value.critical {
+    color: #ff4757;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.stat-label {
+    font-size: 10px;
+    opacity: 0.8;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    margin: 5px 0;
+    border: 1px solid #00ff41;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff41, #00aa2e);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+#gameCanvas {
+    border: 3px solid #00ff41;
+    border-radius: 10px;
+    background: #0a0a0a;
+    cursor: crosshair;
+    display: block;
+}
+
+.controls {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+}
+
+.friend-btn {
+    padding: 8px 12px;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 10px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    position: relative;
+}
+
+.friend-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    border-color: #00ff41;
+}
+
+.friend-btn:disabled {
+    background: #333;
+    cursor: not-allowed;
+    transform: none;
+    opacity: 0.5;
+    filter: grayscale(1);
+}
+
+.friend-btn.selected {
+    border-color: #00ff41;
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+
+/* Color coordination for friend types */
+.friend-btn.nerd-specialist { background: linear-gradient(45deg, #9C27B0, #673AB7); }
+.friend-btn.nature-specialist { background: linear-gradient(45deg, #4CAF50, #388E3C); }
+.friend-btn.professional-counter { background: linear-gradient(45deg, #FF9800, #F57C00); }
+.friend-btn.speed-specialist { background: linear-gradient(45deg, #00BCD4, #0097A7); }
+.friend-btn.charm-specialist { background: linear-gradient(45deg, #E91E63, #C2185B); }
+.friend-btn.support-specialist { background: linear-gradient(45deg, #FF9800, #F57C00); }
+
+.upgrade-indicator {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: gold;
+    color: black;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    font-size: 8px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-btn {
+    padding: 12px 20px;
+    background: linear-gradient(45deg, #00ff41, #00aa2e);
+    border: none;
+    border-radius: 8px;
+    color: black;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.game-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 65, 0.4);
+}
+
+.game-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.speed-btn {
+    padding: 8px 15px;
+    background: linear-gradient(45deg, #FFC107, #FF8F00);
+    border: none;
+    border-radius: 8px;
+    color: black;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.speed-btn.fast {
+    background: linear-gradient(45deg, #FF5722, #D84315);
+    color: white;
+}
+
+.codex-btn {
+    padding: 8px 15px;
+    background: linear-gradient(45deg, #9C27B0, #673AB7);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.wave-info {
+    text-align: center;
+    margin-top: 10px;
+    padding: 8px;
+    background: rgba(0, 255, 65, 0.1);
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #00ff41;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    border: 2px solid #00ff41;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.upgrade-modal {
+    max-width: 500px;
+}
+
+.codex-modal {
+    max-width: 600px;
+    text-align: left;
+}
+
+.game-over-modal {
+    max-width: 450px;
+}
+
+.upgrade-options {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.upgrade-btn {
+    padding: 15px;
+    background: linear-gradient(45deg, #9C27B0, #673AB7);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-size: 12px;
+}
+
+.upgrade-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(156, 39, 176, 0.4);
+}
+
+.upgrade-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+.notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    background: linear-gradient(135deg, #00ff41, #00aa2e);
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    z-index: 1001;
+    display: none;
+}
+
+.debug-info {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #00ff41;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 10px;
+    z-index: 100;
+    display: none; /* Hidden by default */
+}
+
+.enemy-preview {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.enemy-icon {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 12px;
+    color: white;
+    font-weight: bold;
+    position: relative;
+}
+
+.codex-section {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(0, 255, 65, 0.1);
+    border-radius: 10px;
+}
+
+.codex-item {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+}
+
+.codex-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.cancel-text {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #00ff41;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.storyline-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.storyline-content {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #00ff41;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    border: 3px solid #00ff41;
+    max-width: 500px;
+    max-height: 600px;
+    overflow-y: auto;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.upgrade-btn.selected {
+    background: linear-gradient(45deg, #4CAF50, #388E3C);
+    border: 2px solid #00ff41;
+}
+
+.upgrade-btn.unavailable {
+    background: #333;
+    opacity: 0.5;
+    filter: grayscale(1);
+    cursor: not-allowed;
+}

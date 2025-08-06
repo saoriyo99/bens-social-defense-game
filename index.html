@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ben's Social Defense Tower</title>
+    <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="story-header">
+            <div>📟 <strong>BEN'S SOCIAL DEFENSE SYSTEM</strong> 📟</div>
+            <div style="font-size: 11px; margin-top: 5px;">Ben just wants to code in peace. Deploy friends to handle social interactions!</div>
+        </div>
+
+        <div class="game-header">
+            <div class="stat">
+                <div class="stat-value" id="health">20</div>
+                <div class="stat-label">SOCIAL BATTERY</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="money">100</div>
+                <div class="stat-label">FOCUS POINTS</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="wave">1</div>
+                <div class="stat-label">WAVE</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="score">0</div>
+                <div class="stat-label">CODE COMMITS</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 10px;">
+            <div style="font-size: 12px; margin-bottom: 5px;">CODING PROGRESS</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+            </div>
+            <div style="font-size: 10px;" id="progressText">Setting up development environment...</div>
+        </div>
+
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+        <div class="controls">
+            <button class="friend-btn professional-counter" onclick="selectFriend('dario')" id="darioBtn" title="Dario: Reliable small talk. Works on everyone but not amazing at anything.">
+                Dario (50🍃)<br><span style="font-size: 9px;">Reliable All-Rounder</span>
+                <div class="upgrade-indicator">⭐</div>
+            </button>
+            <button class="friend-btn nerd-specialist" onclick="selectFriend('tony')" id="tonyBtn" title="Tony: Star Wars tangents. Excellent vs Nerdy types (Intern, Coworker). Weak vs Professional types.">
+                Tony (120🍃)<br><span style="font-size: 9px;">⭐ Star Wars Specialist</span>
+                <div class="upgrade-indicator">⭐</div>
+            </button>
+            <button class="friend-btn support-specialist" onclick="selectFriend('sophia')" id="sophiaBtn" title="Sophia: Premium support specialist. Heals and boosts nearby friends.">
+                Sophia (180🍃)<br><span style="font-size: 9px;">💚 Premium Support</span>
+                <div class="upgrade-indicator">⭐</div>
+            </button>
+            <button class="friend-btn charm-specialist" onclick="selectFriend('max')" id="maxBtn" title="Max: Slow but devastating single-target music specialist.">
+                Max (160🍃)<br><span style="font-size: 9px;">🎵 Heavy Hitter</span>
+                <div class="upgrade-indicator">⭐</div>
+            </button>
+            <button class="friend-btn nature-specialist" onclick="selectFriend('junior')" id="juniorBtn" title="Junior: Long range trivia. Excellent vs Elderly/Uncle who love stories, weak vs young fast enemies.">
+                Junior (90🍃)<br><span style="font-size: 9px;">📚 Elder Specialist</span>
+                <div class="upgrade-indicator">⭐</div>
+            </button>
+            <button class="friend-btn speed-specialist" onclick="selectFriend('sao')" id="saoBtn" title="Sao: Pure slowdown specialist. Needs damage upgrade to attack.">
+                Sao (140🍃)<br><span style="font-size: 9px;">⚡ Pure Slowdown</span>
+                <div class="upgrade-indicator">⭐</div>
+            </button>
+            <button class="friend-btn nerd-specialist" onclick="selectFriend('po')" id="poBtn" title="Pō: Conspiracy slowdown specialist. Needs damage upgrade to attack.">
+                Pō (110🍃)<br><span style="font-size: 9px;">👁️ Conspiracy Slow</span>
+                <div class="upgrade-indicator">⭐</div>
+            </button>
+            <button class="friend-btn charm-specialist" onclick="selectFriend('wrenly')" id="wrenlyBtn" title="Wrenly: Premium cuteness specialist with AOE charm.">
+                Wrenly (170🍃)<br><span style="font-size: 9px;">🥺 Premium Charm</span>
+                <div class="upgrade-indicator">⭐</div>
+            </button>
+            <button class="friend-btn speed-specialist" onclick="selectFriend('drea')" id="dreaBtn" title="Drea: Speed talker. Rapid fire but low damage. Great vs weak enemies, struggles with tanks.">
+                Drea (65🍃)<br><span style="font-size: 9px;">💨 Rapid Fire</span>
+                <div class="upgrade-indicator">⭐</div>
+            </button>
+            <button class="friend-btn nature-specialist" onclick="selectFriend('ruel')" id="ruelBtn" title="Ruel: Premium train specialist. Boring but devastatingly effective.">
+                Ruel (130🍃)<br><span style="font-size: 9px;">🚂 Premium Trains</span>
+                <div class="upgrade-indicator">⭐</div>
+            </button>
+            <button class="friend-btn nature-specialist" onclick="selectFriend('nicole')" id="nicoleBtn" title="Nicole: Premium long-range flower wisdom specialist.">
+                Nicole (125🍃)<br><span style="font-size: 9px;">🌸 Premium Nature</span>
+                <div class="upgrade-indicator">⭐</div>
+            </button>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: center;">
+            <button class="game-btn" onclick="startNextWave()" id="nextWaveBtn">
+                Start Wave
+            </button>
+            <button class="speed-btn" onclick="toggleSpeed()" id="speedBtn">
+                🐌 Normal
+            </button>
+            <button class="codex-btn" onclick="showCodex()">
+                📖 Codex
+            </button>
+        </div>
+
+        <div class="wave-info">
+            <div id="waveStatus">Welcome! Click "Let's Help Ben Code!" to choose your development challenge!</div>
+        </div>
+    </div>
+
+    <!-- Debug Info -->
+    <div class="debug-info" id="debugInfo">
+        Debug info loading...
+    </div>
+
+    <!-- Storyline Modal -->
+    <div class="storyline-modal" id="storylineModal">
+        <div class="storyline-content">
+            <h1 style="margin-bottom: 20px;">📟 Welcome to Ben's Social Defense! 📟</h1>
+            <p style="margin-bottom: 15px;">
+                Meet <strong>Ben</strong> - a brilliant but introverted coder who just wants to work on his projects in peace.
+            </p>
+            <p style="margin-bottom: 15px;">
+                Unfortunately, the world is full of people who want to chat, network, share stories, and "connect" with him.
+            </p>
+            <p style="margin-bottom: 15px;">
+                Luckily, Ben has amazing friends and family who are willing to intercept these social energy vampires and exhaust them with conversation before they reach his coding sanctuary!
+            </p>
+            <p style="margin-bottom: 25px;">
+                <strong>Your Mission:</strong> Deploy Ben's friends strategically to handle social interactions so he can focus on building his coding empire!
+            </p>
+            <button class="game-btn" onclick="startGame()">
+                Let's Help Ben Code! 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- Map Selection Modal -->
+    <div class="storyline-modal" id="mapSelectionModal" style="display: none;">
+        <div class="storyline-content" style="max-width: 700px;">
+            <h1 style="margin-bottom: 20px;">🗺️ Choose Your Development Challenge! 🗺️</h1>
+            <p style="margin-bottom: 20px;">
+                Ben needs to complete different stages of his programming project. Each environment brings new challenges and more ways for people to interrupt him!
+            </p>
+            <div id="mapGrid" style="display: grid; grid-template-columns: 1fr; gap: 15px; margin: 20px 0;">
+                <!-- Maps will be dynamically generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Wave Preview Modal -->
+    <div class="modal" id="waveModal">
+        <div class="modal-content">
+            <h2 id="waveTitle">Incoming Social Event</h2>
+            <div id="waveDescription"></div>
+            <div class="enemy-preview" id="enemyPreview"></div>
+            <button class="game-btn" onclick="startWaveFromModal()">
+                Brace for Impact!
+            </button>
+        </div>
+    </div>
+
+    <!-- Upgrade Modal -->
+    <div class="modal" id="upgradeModal">
+        <div class="modal-content upgrade-modal">
+            <h2 id="upgradeTitle">Upgrade Friend</h2>
+            <div id="upgradeDescription"></div>
+            <div class="upgrade-options" id="upgradeOptions">
+                <!-- Dynamic upgrade buttons will be inserted here -->
+            </div>
+            <button class="game-btn" onclick="closeUpgradeModal()">
+                Cancel
+            </button>
+        </div>
+    </div>
+
+    <!-- Codex Modal -->
+    <div class="modal" id="codexModal">
+        <div class="modal-content codex-modal">
+            <h2>📖 Defense Codex</h2>
+            
+            <div class="codex-section">
+                <h3>🤝 Friends (Your Defenders)</h3>
+                <div style="font-size: 11px; margin-bottom: 10px;">Color coordination: Same colored friends work well against similar enemy types!</div>
+                <div id="friendsCodex">
+                    <!-- Dynamic friend info will be inserted here -->
+                </div>
+            </div>
+            
+            <div class="codex-section">
+                <h3>😰 Enemies (Social Energy Vampires)</h3>
+                <div id="enemiesCodex">
+                    <!-- Dynamic enemy info will be inserted here -->
+                </div>
+            </div>
+            
+            <button class="game-btn" onclick="closeCodex()">
+                Close Codex
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div class="modal" id="gameOverModal">
+        <div class="modal-content game-over-modal">
+            <h2>💥 SOCIAL OVERLOAD! 💥</h2>
+            <div style="font-size: 18px; margin: 20px 0;">
+                Oh no! Ben talked to too many people and exploded.<br>
+                beep bop :/ 
+            </div>
+            <div style="margin: 15px 0;">
+                <strong>Final Stats:</strong><br>
+                Waves Survived: <span id="finalWave">0</span><br>
+                Code Commits: <span id="finalScore">0</span><br>
+                Social Interactions Handled: <span id="totalEnemies">0</span>
+            </div>
+            <button class="game-btn" onclick="location.reload()">
+                Try Again
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Cancel Text -->
+    <div class="cancel-text" id="cancelText" style="display: none;">
+        Press ESC or right-click to cancel placement
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>
